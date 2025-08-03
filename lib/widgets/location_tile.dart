@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:favorcito/models.dart/location.dart';
+import 'package:favorcito/models/location.dart';
 
 class LocationTile extends StatelessWidget {
   final LocationModel location;

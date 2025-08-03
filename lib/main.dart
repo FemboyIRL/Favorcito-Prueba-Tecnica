@@ -1,8 +1,10 @@
 import 'package:favorcito/pages/main_menu_screen/screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const FavWeatherApp());
 }
 
@@ -14,9 +16,9 @@ class FavWeatherApp extends StatelessWidget {
     return GetMaterialApp(
       title: "FavWeather - Prueba Tecnica",
       theme: ThemeData(
-        // Esquema de colores que combina con el widget del clima
+        // Esquema de colores de la app
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1E88E5), // Azul principal del widget
+          seedColor: const Color(0xFF1E88E5), // Azul principal
           brightness: Brightness.light,
           primary: const Color(0xFF1E88E5),
           primaryContainer: const Color(0xFF4FC3F7),
@@ -24,11 +26,9 @@ class FavWeatherApp extends StatelessWidget {
           secondaryContainer: const Color(0xFF90CAF9),
           tertiary: const Color(0xFF29B6F6),
           surface: Colors.white,
-          background: const Color(0xFFF8FAFE), // Azul muy claro
           onPrimary: Colors.white,
           onSecondary: Colors.white,
           onSurface: const Color(0xFF1A1C1E),
-          onBackground: const Color(0xFF1A1C1E),
         ),
 
         // Fondo principal con degradado sutil
@@ -38,7 +38,7 @@ class FavWeatherApp extends StatelessWidget {
         brightness: Brightness.light,
         useMaterial3: true,
 
-        // AppBar theme que combina
+        // AppBar theme
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF1E88E5),
           foregroundColor: Colors.white,
@@ -78,7 +78,7 @@ class FavWeatherApp extends StatelessWidget {
           ),
         ),
 
-        // Cards que complementan el diseño
+        // Cards 
         cardTheme: CardTheme(
           color: Colors.white,
           shadowColor: const Color(0xFF1E88E5).withOpacity(0.1),

@@ -1,6 +1,7 @@
 import 'package:favorcito/pages/main_menu_screen/state.dart';
-import 'package:favorcito/utilities/delegates/header_child_sliver_list.dart';
+import 'package:favorcito/widgets/common_scaffold.dart';
 import 'package:favorcito/widgets/empty_weather_widget.dart';
+import 'package:favorcito/widgets/forecast_widget.dart';
 import 'package:favorcito/widgets/location_tile.dart';
 import 'package:favorcito/widgets/weather_authorities.dart';
 import 'package:favorcito/widgets/weather_widget.dart';
@@ -10,28 +11,6 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
-
-  Widget _persistentTitle() {
-    return SliverPersistentHeader(
-        pinned: true,
-        floating: false,
-        delegate: HeaderChildSliverList(
-            maxSize: 60,
-            minSize: 60,
-            child: const Hero(
-                tag: "prueba-tecnica",
-                child: ColoredBox(
-                    color: Colors.black,
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(children: [
-                          Text("FavWeather",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                  color: Colors.white))
-                        ]))))));
-  }
 
   Widget _persistentSearchBarWithResults(final MainMenuState state) {
     return SliverPadding(
@@ -99,30 +78,107 @@ class MainMenuScreen extends StatelessWidget {
         separatorBuilder: (context, index) => const SizedBox(height: 10));
   }
 
+  Row _buttons(MainMenuState state) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Opacity(
+          opacity: state.selectedButton == 1 ? 1.0 : 0.5,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black
+                      .withOpacity(state.selectedButton == 1 ? .2 : .0),
+                  blurRadius: 4.0,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: const RoundedRectangleBorder(),
+                backgroundColor: Colors.white,
+                elevation: 0,
+              ),
+              onPressed: () => state.selectButton(1),
+              child: Text(
+                "Diario",
+                style: TextStyle(
+                  color: state.selectedButton == 1 ? Colors.black : Colors.grey,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Opacity(
+          opacity: state.selectedButton == 2 ? 1.0 : 0.5,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black
+                      .withOpacity(state.selectedButton == 2 ? 0.2 : 0),
+                  blurRadius: 4.0,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: const RoundedRectangleBorder(),
+                backgroundColor: Colors.white,
+                elevation: 0,
+              ),
+              onPressed: () => state.selectButton(2),
+              child: Text(
+                "Semanal",
+                style: TextStyle(
+                  color: state.selectedButton == 2 ? Colors.black : Colors.grey,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MainMenuState>(
-      init: MainMenuState(),
-      builder: (state) => Scaffold(
-          key: key,
-          body: CustomScrollView(
-            controller: state.scrollController,
-            slivers: [
-              _persistentTitle(),
-              _persistentSearchBarWithResults(state),
-              SliverToBoxAdapter(
-                child: state.selectedLocation != null
-                    ? WeatherWidget(
-                        weatherData: state.selectedLocation!,
-                        isLoading: state.weatherLoader.value,
-                      )
-                    : const EmptyWeatherWidget(),
-              ),
-              SliverVisibility(
-                  visible: !state.weatherLoader.value,
-                  sliver: _operationsWidget(context: context, state: state)),
-            ],
-          )),
-    );
+        init: MainMenuState(),
+        builder: (state) => WeatherCommonScaffold(
+              key: key,
+              sliversChildren: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: _buttons(state),
+                  ),
+                ),
+                _persistentSearchBarWithResults(state),
+                SliverToBoxAdapter(
+                    child: state.selectedLocation == null
+                        ? const EmptyWeatherWidget()
+                        : state.selectedLocation != null &&
+                                state.selectedButton == 1
+                            ? WeatherWidget(
+                                weatherData: state.selectedLocation!,
+                                isLoading: state.weatherLoader.value)
+                            : state.forecast != null
+                                ? ForecastWidget(
+                                    forecastData: state.forecast!,
+                                    isLoading: state.weatherLoader.value)
+                                : null),
+                SliverVisibility(
+                    visible: !state.weatherLoader.value,
+                    sliver: _operationsWidget(context: context, state: state)),
+              ],
+            ));
   }
 }

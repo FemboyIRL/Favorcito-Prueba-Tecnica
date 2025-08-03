@@ -1,5 +1,5 @@
-import 'package:favorcito/models.dart/air_queality.dart';
-import 'package:favorcito/models.dart/weather_condition.dart';
+import 'package:favorcito/models/air_queality.dart';
+import 'package:favorcito/models/weather_condition.dart';
 
 class CurrentWeather {
   final DateTime lastUpdated;

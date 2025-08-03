@@ -70,7 +70,7 @@ class EmptyWeatherWidget extends StatelessWidget {
 
                   // Descripción
                   Text(
-                    'Para comenzar a ver el pronóstico del tiempo, agrega tu primera ubicación.',
+                    'Para comenzar a ver el pronóstico del tiempo, busca tu ubicación.',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white.withOpacity(0.9),
@@ -136,7 +136,7 @@ class EmptyWeatherWidget extends StatelessWidget {
         onPressed: onAddLocationPressed,
         icon: const Icon(Icons.add_location_alt_outlined, size: 24),
         label: const Text(
-          'Agregar Ubicación',
+          'Busca tu ubicación',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,

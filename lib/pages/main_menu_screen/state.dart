@@ -1,20 +1,22 @@
-import 'package:favorcito/models.dart/current_wheater_model.dart';
-import 'package:favorcito/models.dart/location.dart';
-import 'package:favorcito/models.dart/weather_authorities.dart';
+import 'package:favorcito/models/current_wheater_model.dart';
+import 'package:favorcito/models/location.dart';
+import 'package:favorcito/models/weather_authorities.dart';
+import 'package:favorcito/models/weather_forecast.dart';
 import 'package:favorcito/services/api_consumer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MainMenuState extends GetxController {
   // resources
-  final api = ApiConsumer(apiToken: "d2e1246a0ceb41bc87c235135250108");
-  ScrollController scrollController = ScrollController();
+  final api = const ApiConsumer();
   final searchController = TextEditingController();
   final searchValue = ''.obs;
   final locations = <LocationModel>[].obs;
   WeatherModel? selectedLocation;
+  ForecastModel? forecast;
   final searchBarLoader = false.obs;
   final weatherLoader = false.obs;
+  int selectedButton = 1;
 
   final authorities = <WeatherAuthoritiesModel>[
     WeatherAuthoritiesModel(
@@ -38,20 +40,20 @@ class MainMenuState extends GetxController {
   //methods
 
   void onLocationSelected(LocationModel location) async {
-    // Scrollea al inicio de la pantalla
-    scrollController.animateTo(0.0,
-        duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
-
     try {
       weatherLoader.value = true;
       final name = location.name;
       // Fetching de los datos de location.name
-      final result = await api.getCurrentWeather(name);
-      // Guardar los datos de la ubicacion seleccionada
-      selectedLocation = result;
+      final weather = await api.getCurrentWeather(name);
+      final forecastFromServer = await api.getForecast(name);
+
+      // Guardar los datos de la ubicacion y el pronostico seleccionados 
+      selectedLocation = weather;
+      forecast = forecastFromServer;
       // Cerramos
       clearSearch();
     } catch (e) {
+      print(e);
       // Mostrar mensaje de error
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(
@@ -62,6 +64,11 @@ class MainMenuState extends GetxController {
       weatherLoader.value = false;
       update();
     }
+  }
+
+  void selectButton(int buttonId) {
+    selectedButton = buttonId;
+    update();
   }
 
   void clearSearch() {

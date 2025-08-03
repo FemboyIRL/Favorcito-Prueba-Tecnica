@@ -1,5 +1,5 @@
-import 'package:favorcito/models.dart/current.dart';
-import 'package:favorcito/models.dart/location.dart';
+import 'package:favorcito/models/current.dart';
+import 'package:favorcito/models/location.dart';
 
 class WeatherModel {
   final LocationModel location;

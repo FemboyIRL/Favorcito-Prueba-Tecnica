@@ -1,4 +1,4 @@
-import 'package:favorcito/models.dart/weather_authorities.dart';
+import 'package:favorcito/models/weather_authorities.dart';
 import 'package:flutter/material.dart';
 
 class WeatherAuthoritiesWidget extends StatefulWidget {

@@ -1,18 +1,15 @@
 import 'dart:convert';
-import 'package:favorcito/models.dart/current_wheater_model.dart';
-import 'package:favorcito/models.dart/location.dart';
+import 'package:favorcito/models/current_wheater_model.dart';
+import 'package:favorcito/models/location.dart';
+import 'package:favorcito/models/weather_forecast.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-
-// Actual https://api.weatherapi.com/v1/current.json?key=d2e1246a0ceb41bc87c235135250108&q=Los Mochis&aqi=yes
-// Predicción https://api.weatherapi.com/v1/future.json?key=d2e1246a0ceb41bc87c235135250108&q=Los Mochis&dt=2025-09-01
-// searchBar https://api.weatherapi.com/v1/current.json?key=d2e1246a0ceb41bc87c235135250108&q=Los Mochis&aqi=yes
-// Fases lunares https://api.weatherapi.com/v1/astronomy.json?key=d2e1246a0ceb41bc87c235135250108&q=Los Mochis&dt=2025-08-02
 
 class ApiConsumer {
   static const String _baseUrl = 'https://api.weatherapi.com/v1';
-  final String apiToken;
+  static String apiToken = dotenv.env['WEATHER_API_KEY'] ?? '';
 
-  ApiConsumer({required this.apiToken});
+  const ApiConsumer({apiToken});
 
   // Método genérico para hacer requests
   Future<dynamic> _makeRequest(
@@ -24,6 +21,7 @@ class ApiConsumer {
         queryParameters: {
           'key': apiToken,
           ...?queryParams,
+          'lang': 'es',
         },
       );
 
@@ -65,18 +63,22 @@ class ApiConsumer {
   }
 
   // Obtener pronóstico
-  Future<Map<String, dynamic>> getForecast(
+  Future<ForecastModel> getForecast(
     String location, {
-    int days = 3,
+    int days = 7,
     bool includeAirQuality = false,
     bool includeAlerts = false,
   }) async {
-    return await _makeRequest('forecast.json', queryParams: {
+    final response = await _makeRequest('forecast.json', queryParams: {
       'q': location,
       'days': days.toString(),
       'aqi': includeAirQuality ? 'yes' : 'no',
       'alerts': includeAlerts ? 'yes' : 'no',
     });
+
+    print(response);
+
+    return ForecastModel.fromJson(response);
   }
 
   // Obtener clima histórico

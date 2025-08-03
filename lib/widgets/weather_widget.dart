@@ -1,6 +1,6 @@
-import 'package:favorcito/models.dart/current.dart';
-import 'package:favorcito/models.dart/current_wheater_model.dart';
-import 'package:favorcito/models.dart/location.dart';
+import 'package:favorcito/models/current.dart';
+import 'package:favorcito/models/current_wheater_model.dart';
+import 'package:favorcito/models/location.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -74,11 +74,11 @@ class WeatherWidget extends StatelessWidget {
                       _buildMainTemperatureSection(current, theme),
                       const SizedBox(height: 32),
 
-                      // Condición climática mejorada
+                      // Condición climática
                       _buildWeatherCondition(current, theme),
                       const SizedBox(height: 32),
 
-                      // Detalles en cards mejoradas
+                      // Detalles en cards
                       _buildWeatherDetails(current, colors),
                     ],
                   ),
